@@ -1,1 +1,41 @@
 
+<h1><%= @post.title %></h1>
+
+<p><%= @post.content %></p>
+
+Categories
+<ul>
+  <% @post.categories.each do |c| %>
+    <li><%= c.name %></li>
+  <% end %>
+</ul>
+
+<%= form_for Comment.new do |f| %>
+
+  <%# this is just bad design! %>
+  <%= hidden_field_tag :'comment[post_id]', @post.id %>
+
+  <%= f.text_field :content %>
+
+  <%= f.collection_select :user_id, User.all, :id, :username %>
+
+  <%= f.fields_for :user, User.new do |user|%>
+    <%= user.label :username %>
+    <%= user.text_field :username %>
+  <% end %>
+
+  <%= f.submit "Create Comment" %>
+<% end %>
+
+<h4>Users who commented</h4>
+<ul>
+  <% @post.users.distinct.each do |user| %>
+    <li> <%= link_to user.username, user_path(user) %> </li>
+  <% end %>
+</ul>
+
+<% @post.comments.each do |comment| %>
+  <div>
+    <p><%= "#{comment.user.username} says: #{comment.content}" %></p>
+  </div>
+<% end %>
