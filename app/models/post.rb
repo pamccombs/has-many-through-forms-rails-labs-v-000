@@ -9,7 +9,7 @@ class Post < ActiveRecord::Base
       category = Category.find_or_create_by(attr)
       self.categories << category
     end
-end
+  end
 
 
 end
